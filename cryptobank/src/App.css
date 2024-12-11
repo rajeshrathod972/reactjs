@@ -1,1 +1,5 @@
-
+@media screen and (max-width: 431px) {
+    #isMobile{
+        background-color: rgb(35, 113, 236);
+    }
+}
