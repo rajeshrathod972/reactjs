@@ -1,17 +1,35 @@
 import React, { useState } from 'react';
 import QRCode from "../assets/images/QR_code.svg";
 import { FaCopy } from 'react-icons/fa';
-import FirebyteICon from "../assets/images/firebytes-small-dark.png"
+import FirebyteICon from "../assets/images/firebytes-small-dark.png";
+import Ethereum from "../assets/images/Ethereum-Logo.wine.png";
+import Polygon from "../assets/images/polygon.png";
+import Binance from "../assets/images/binance.png";
+import USDC from "../assets/images/usdc.jfif"
+
 const Checkout = () => {
 
-    const [inputValue, setInputValue] = useState('');
-    const [inputWidth, setInputWidth] = useState(20); // Initial width set to 20px
+    const [amount, setAmount] = useState('');
+    const [note, setNote] = useState('');
+    const [inputWidth, setInputWidth] = useState(20); // Dynamic width for the amount input
+    const [isDisabled, setIsDisabled] = useState(true); // Disable button if amount is empty or zero
+    const [selectedOption, setSelectedOption] = useState(''); // For radio button selection
 
     const handleInputChange = (e) => {
         const value = e.target.value;
-        setInputValue(value);
-        setInputWidth((value.length + 1) * 14); // Adjust width based on the input length
+        setAmount(value);
+        setInputWidth(value.length * 10 + 14); // Adjust width based on input length
+        setIsDisabled(value === '' || value === '0'); // Disable button if value is 0 or empty
     };
+
+    const handleNoteChange = (e) => {
+        setNote(e.target.value);
+    };
+
+    const handleOptionChange = (e) => {
+        setSelectedOption(e.target.value);
+    };
+
 
     const descriptionText = "12h8zEe2MzTgZvDrJpMyudfasbeKaAYnLJ";
 
@@ -43,17 +61,34 @@ const Checkout = () => {
 
     }
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(descriptionText)
-            .then(() => {
-                alert("Text copied to clipboard!");
-            })
-            .catch(err => {
-                console.error("Failed to copy: ", err);
-            });
+    // const handleCopy = () => {
+    //     navigator.clipboard.writeText(descriptionText)
+    //         .then(() => {
+    //             alert("Text copied to clipboard!");
+    //         })
+    //         .catch(err => {
+    //             console.error("Failed to copy: ", err);
+    //         });
+    // };
+    // const isDisabled = amount === '0';
+    // const isDisabled = '';
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault(); // Prevent default form submission
+        if (!amount || amount === '0') {
+            alert('Please enter a valid amount.');
+            return;
+        }
+
+
+        if (!selectedOption) {
+            alert('Please select a payment option.');
+            return;
+        }
+        // Add your form submission logic here (e.g., API call)
+        console.log(`Payment of ₹${amount} via ${selectedOption} submitted. and your note is ${note}`);
     };
-    // const isDisabled = inputValue === '0';
-    const isDisabled = '0';
 
     return (
         <>
@@ -103,10 +138,10 @@ const Checkout = () => {
                         bottom: "60%",
                         left: "93%",
                     }}></div>
-                <div className="relative flex flex-col items-center justify-center mt-20 mx-3">
+                {/* <div className="relative flex flex-col items-center justify-center mt-20 mx-3">
                     <img src={FirebyteICon} alt="" className="h-16 w-16 absolute -top-6 z-10 rounded-md" />
                     <div class="flex items-center justify-center text-center relative z-0">
-                        <div class="w-auto rounded overflow-hidden shadow-lg bg-white p-6">
+                        <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white p-6">
                             <p class="text-gray-700 font-medium text-lg mb-2 mt-[50px]">Paying</p>
                             <h2 class="text-gray-900 text-2xl font-bold mb-4">SYNEXIS TECHNOLOGIES</h2>
                             <p class="text-gray-600 text-sm mb-4">razopay.me/@synexiesttechnologies</p>
@@ -115,7 +150,7 @@ const Checkout = () => {
                                 <span class="font-semibold text-2xl leading-6 text-[#2b4486] mr-0 flex-shrink-0">₹</span>
                                 <input
                                     type="text"
-                                    value={inputValue}
+                                    value={amount}
                                     onChange={handleInputChange}
                                     className="font-bold text-2xl leading-8 text-[#162f56] border-0 outline-none p-0 text-center"
                                     placeholder="0"
@@ -123,6 +158,36 @@ const Checkout = () => {
                                 />
                             </div>
 
+                            <div>
+                                <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white pb-5">
+                                    <li class="w-full sm:border-b-0  dark:border-gray-600">
+                                        <div class="flex items-center ps-3">
+                                            <input id="ethereum" type="radio" value="ethereum" name="list-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                            <img src={Ethereum} alt="" className="h-8 w-8 ml-2" />
+                                            
+                                        </div>
+                                    </li>
+                                    <li class="w-full border-b border-gray-200 sm:border-b-0  dark:border-gray-600">
+                                        <div class="flex items-center ps-3">
+                                            <input id="polygon" type="radio" value="polygon" name="list-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                            <img src={Polygon} alt="" className="h-8 w-8 ml-2" />
+                                        </div>
+                                    </li>
+                                    <li class="w-full border-b border-gray-200 sm:border-b-0  dark:border-gray-600">
+                                        <div class="flex items-center ps-3">
+                                            <input id="binance" type="radio" value="binance" name="list-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                            <img src={Binance} alt="" className="h-8 w-8 ml-2" />
+                                        </div>
+                                    </li>
+                                    <li class="w-full dark:border-gray-600">
+                                        <div class="flex items-center ps-3">
+                                            <input id="usdc" type="radio" value="usdc" name="list-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                            <img src={USDC} alt="" className="h-8 w-10 ml-2" />
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </div>
                             <textarea
                                 class="bg-[#162f56] bg-opacity-5 rounded-lg leading-8 text-center outline-none border-0 resize-none m-auto text-[#162f56] text-opacity-54  w-[260px] h-[36px] overflow-hidden mb-[50px]"
                                 maxLength={100}
@@ -134,13 +199,87 @@ const Checkout = () => {
                                 className={`font-medium text-sm px-5 py-2.5 text-center inline-flex justify-center items-center rounded-lg w-full mt-4 ${isDisabled ? 'bg-[rgb(35,113,236)] text-white cursor-not-allowed opacity-50' : 'bg-[rgb(35,113,236)] text-white hover:bg-[rgb(35,113,236)]'
                                     }`}
                             >
-                                Pay ₹{inputValue || 0}
+                                Pay ₹{amount || 0}
                             </button>
                         </div>
                     </div>
 
-                </div>
+                </div> */}
 
+                <div className="relative flex flex-col items-center justify-center mt-20 mx-3">
+                    <img src={FirebyteICon} alt="" className="h-16 w-16 absolute -top-6 z-10 rounded-md" />
+                    <div className="flex items-center justify-center text-center relative z-0">
+                        <form onSubmit={handleSubmit} className="max-w-sm rounded overflow-hidden shadow-lg bg-white p-6">
+                            <p className="text-gray-700 font-medium text-lg mb-2 mt-[50px]">Paying</p>
+                            <h2 className="text-gray-900 text-2xl font-bold mb-4">SYNEXIS TECHNOLOGIES</h2>
+                            <p className="text-gray-600 text-sm mb-4">razopay.me/@synexiesttechnologies</p>
+
+                            <div className="flex justify-center items-center py-6 w-full">
+                                <span className="font-semibold text-2xl leading-6 text-[#2b4486] mr-0 flex-shrink-0">₹</span>
+                                <input
+                                    type="text"
+                                    value={amount}
+                                    onChange={handleInputChange}
+                                    className="font-bold text-2xl leading-8 text-[#162f56] border-0 outline-none p-0 text-center"
+                                    placeholder="0"
+                                    style={{ width: `${inputWidth}px` }}
+                                />
+                            </div>
+
+                            <div>
+                                <ul
+                                    className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg flex flex-wrap gap-0 dark:bg-gray-700 dark:border-gray-600 dark:text-white pb-5 pl-5"
+                                >
+                                    {['ethereum', 'polygon', 'binance', 'usdc'].map((option, index) => (
+                                        <li
+                                            key={index}
+                                            className="flex items-center rounded-lg p-2 dark:border-gray-600"
+                                        >
+                                            <input
+                                                id={option}
+                                                type="radio"
+                                                value={option}
+                                                name="list-radio"
+                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                                onChange={handleOptionChange}
+                                            />
+                                            <img
+                                                src={
+                                                    option === 'ethereum'
+                                                        ? Ethereum
+                                                        : option === 'polygon'
+                                                            ? Polygon
+                                                            : option === 'binance'
+                                                                ? Binance
+                                                                : USDC
+                                                }
+                                                alt=""
+                                                className="h-8 w-8 ml-2"
+                                            />
+                                        </li>
+                                    ))}
+                                </ul>
+
+                            </div>
+
+                            <textarea
+                                className="bg-[#162f56] bg-opacity-5 rounded-lg leading-8 text-center outline-none border-0 resize-none m-auto text-[#162f56] text-opacity-54 w-[260px] h-[36px] overflow-hidden mb-[50px]"
+                                maxLength={100}
+                                placeholder="Add a note"
+                                value={note}
+                                onChange={handleNoteChange}
+                            ></textarea>
+
+                            <button
+                                type="submit" // Change button type to "submit"
+                                disabled={isDisabled}
+                                className={`font-medium text-sm px-5 py-2.5 text-center inline-flex justify-center items-center rounded-lg w-full mt-4 ${isDisabled ? 'bg-[rgb(35,113,236)] text-white cursor-not-allowed opacity-50' : 'bg-[rgb(35,113,236)] text-white hover:bg-[rgb(35,113,236)]'}`}
+                            >
+                                Pay ₹{amount || 0}
+                            </button>
+                        </form>
+                    </div>
+                </div>
 
                 <div className="flex flex-col items-center text-center mt-5 mx-2">
                     <p className="font-bold">Check deposit status</p>
